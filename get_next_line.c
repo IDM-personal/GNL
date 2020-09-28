@@ -6,7 +6,7 @@
 /*   By: idm <idm@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/11 17:15:08 by idm               #+#    #+#             */
-/*   Updated: 2020/09/28 15:01:23 by idm              ###   ########.fr       */
+/*   Updated: 2020/09/28 15:34:34 by idm              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int toret(int readb, char **nread, char **line)
 
     if (!readb && !*nread)
     {
-        *line = "\0";
+        *line = ft_strdup("");
         return(0);
     }
     if (readb < 0)
@@ -44,9 +44,11 @@ int toret(int readb, char **nread, char **line)
     }
     if((auxcad = ft_strchr(*nread, '\n')))
     {
+        *auxcad = '\0';
         *line = ft_strdup(*nread);
         free(*nread);
         *nread = ft_strdup(auxcad + 1);
+        return (1);
     }
     else if(eofcheck(&*nread, &*line))
         return (0);
@@ -56,13 +58,11 @@ int toret(int readb, char **nread, char **line)
 int get_next_line(int fd, char **line)
 {
     char        *buff;
-    static char *nread;
+    static char *nread[4096];
     int         readb;
     char        *cad;
 
-
-
-    if(fd < 0 || !line || BUFER_SIZE <= 0 || 
+    if(fd < 0 || !line || BUFFER_SIZE <= 0 || 
     (!(buff = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1)))))
         return (-1);
     while ((readb = read(fd, buff, BUFFER_SIZE)) > 0)
